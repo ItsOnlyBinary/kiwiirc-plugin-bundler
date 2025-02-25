@@ -6,6 +6,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
+const WebpackObfuscator = require('webpack-obfuscator');
 
 const utils = require('../utils');
 const pkg = require('../../package.json');
@@ -107,6 +108,20 @@ module.exports = (env, argv, config) => {
                             },
                         },
                     ],
+                },
+
+                {
+                    test: /plugin.js$/,
+                    enforce: 'post',
+                    use: {
+                        loader: WebpackObfuscator.loader,
+                        options: {
+                            stringArray: true,
+                            stringArrayEncoding: [
+                                'base64',
+                            ],
+                        },
+                    },
                 },
 
                 {
